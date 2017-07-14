@@ -1,13 +1,133 @@
 <template>
-    <div class="page has-navbar" v-nav="{title: 'Accounting', showBackButton: false}">
-        <div class="page-content text-center">
-            <h2 class="padding">Accounting</h2>
-        </div>
+    <div class="page has-navbar" v-nav="{title: '收支明细', backButtonText: backButtonText, showBackButton: true, showMenuButton: true, menuButtonText: menuButtonText}">
+        <scroll class="page-content" :on-refresh="onRefresh">
+            <item v-for="(date, daily_records) in records" class="listed-item">
+                <list>
+                    <item class="item-divider">{{date}}</item>
+                    <item v-for="record in daily_records">
+                        <div class="hairline-top"></div>
+                        <div class="hairline-bottom">
+                            {{record.explanation}}
+                            <span class="item-note {{(record.budget > 0) ? 'income' : 'payment'}}">{{record.budget | normalize}}</span>
+                        </div>
+                    </item>
+                </list>
+            </item>
+        </scroll>
     </div>
 </template>
 <script>
-    export default {}
+    export default {
+        data () {
+            return {
+                backButtonText: "<i class='icon ion-navicon'></i> 筛选",
+                menuButtonText: "<i class='icon ion-plus'> 新建</i>",
+                records: {
+                    "2017-01-01": [{
+                        id: "1",
+                        budget: -10,
+                        method: "paypal",
+                        explanation: "买可乐",
+                        date: new Date("2017-01-01"),
+                        location: "America",
+                        geometry: [1.23, 3.45]
+                    }, {
+                        id: "2",
+                        budget: -10,
+                        method: "wechat",
+                        explanation: "午饭",
+                        date: new Date("2017-01-01"),
+                        location: "America",
+                        geometry: [1.23, 3.45]
+                    }, {
+                        id: "3",
+                        budget: -10,
+                        method: "wechat",
+                        explanation: "晚饭",
+                        date: new Date("2017-01-01"),
+                        location: "America",
+                        geometry: [1.23, 3.45]
+                    }, {
+                        id: "4",
+                        budget: -0.2,
+                        method: "wechat",
+                        explanation: "单日打卡",
+                        date: new Date("2017-01-01"),
+                        location: "America",
+                        geometry: [1.23, 3.45]
+                    }, {
+                        id: "5",
+                        budget: 6666.66,
+                        method: "cash",
+                        explanation: "彩票中奖",
+                        date: new Date("2017-01-01"),
+                        location: "America",
+                        geometry: [1.23, 3.45]
+                    }]
+                }
+            }
+        },
+        filters: {
+            normalize: (value) => {
+                let _normalize = (value) => {
+                    let result = "";
+                    value = "" + value;
+                    if (value.indexOf('.') != -1) {
+                        for(let i = value.indexOf('.'); i < value.length; i++) {
+                            result += value.charAt(i);
+                        }
+                        for(let i = 0; i < value.indexOf('.'); i++) {
+                            result = value.charAt(value.indexOf('.') - 1 - i) + result;
+                            if ((i + 1) % 3 == 0 && i != value.indexOf('.') - 1) {
+                                result = "," + result;
+                            }
+                        }
+                    }
+                    else {
+                        for (let i = 0; i < value.length; i++) {
+                            result = value.charAt(value.length - 1 - i) + result;
+                            if ((i + 1) % 3 == 0 && i != value.length - 1) {
+                                result = "," + result;
+                            }
+                        }
+                    }
+                    return result;
+                };
+
+                if (value > 0) {
+                    return "+" + _normalize(value);
+                }
+                else if (value < 0) {
+                    return "-" + _normalize(-value);
+                }
+                return "" + _normalize(value);
+            }
+        },
+        methods: {
+
+            onRefresh(done) {
+                setTimeout(() => {
+                    done();
+                }, 1500)
+            }
+        }
+    }
 </script>
 <style>
+    .listed-item {
+        padding: 0;
+    }
+
+    .income {
+        color: red;
+    }
+
+    .payment {
+        color: #1bb70e;
+    }
+
+    .date-indicator {
+        padding-bottom: 8px;
+    }
 
 </style>

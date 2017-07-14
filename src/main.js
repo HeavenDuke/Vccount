@@ -39,4 +39,3 @@ const routes = {
 };
 
 Vue.use(Vonic.app, {routes: routes, defaultRouteUrl: '/'});
-
