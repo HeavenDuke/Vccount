@@ -12,6 +12,7 @@ import Register from './components/Register.vue'
 import Index from './components/Index.vue'
 import ChangePassword from './components/ChangePassword.vue'
 import EditInfo from './components/EditInfo.vue'
+import NewRecord from './components/NewRecord.vue'
 
 // Routes
 const routes = {
@@ -28,6 +29,9 @@ const routes = {
                 component: Stat
             }
         }
+    },
+    '/accounting/new': {
+        component: NewRecord
     },
     '/about': {
         component: About

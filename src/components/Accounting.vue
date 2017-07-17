@@ -1,6 +1,6 @@
 <template>
     <div class="page has-navbar has-tabbar" v-nav="{title: '账目管理', backButtonText: backButtonText, showBackButton: true, showMenuButton: true, menuButtonText: menuButtonText, onBackButtonClick: showFilter, onMenuButtonClick: addNewItem}" v-tabbar-menu-index="1">
-        <scroll class="page-content" :on-refresh="onRefresh">
+        <scroll class="page-content" :on-refresh="onRefresh" :on-infinite="onInfinite">
             <item v-for="(date, daily_records) in records" class="listed-item">
                 <list>
                     <item class="item-divider">{{date}}</item>
@@ -13,6 +13,7 @@
                     </item>
                 </list>
             </item>
+            <div v-if="nomore" slot="infinite">没有更多记录</div>
         </scroll>
     </div>
 </template>
@@ -20,6 +21,7 @@
     export default {
         data () {
             return {
+                nomore: true,
                 backButtonText: "<i class='icon ion-navicon'></i> 筛选",
                 menuButtonText: "<i class='icon ion-plus'> 新建</i>",
                 records: {
@@ -61,6 +63,15 @@
                         method: "cash",
                         explanation: "彩票中奖",
                         date: new Date("2017-01-01"),
+                        location: "America",
+                        geometry: [1.23, 3.45]
+                    }],
+                    "2017-01-02": [{
+                        id: "2333",
+                        budget: -99,
+                        method: "cache",
+                        explanation: "Steam游戏购买",
+                        date: new Date("2017-01-02"),
                         location: "America",
                         geometry: [1.23, 3.45]
                     }]
@@ -105,13 +116,19 @@
         },
         methods: {
             addNewItem() {
-
+                this.$router.go('/accounting/new');
             },
             showFilter() {
 
             },
             onRefresh(done) {
                 setTimeout(() => {
+                    done();
+                }, 1500)
+            },
+            onInfinite(done) {
+                setTimeout(() => {
+                    this.nomore = true;
                     done();
                 }, 1500)
             }
