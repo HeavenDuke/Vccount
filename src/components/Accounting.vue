@@ -1,5 +1,5 @@
 <template>
-    <div class="page has-navbar" v-nav="{title: '收支明细', backButtonText: backButtonText, showBackButton: true, showMenuButton: true, menuButtonText: menuButtonText}">
+    <div class="page has-navbar has-tabbar" v-nav="{title: '账目管理', backButtonText: backButtonText, showBackButton: true, showMenuButton: true, menuButtonText: menuButtonText, onBackButtonClick: showFilter, onMenuButtonClick: addNewItem}" v-tabbar-menu-index="1">
         <scroll class="page-content" :on-refresh="onRefresh">
             <item v-for="(date, daily_records) in records" class="listed-item">
                 <list>
@@ -104,7 +104,12 @@
             }
         },
         methods: {
+            addNewItem() {
 
+            },
+            showFilter() {
+
+            },
             onRefresh(done) {
                 setTimeout(() => {
                     done();
