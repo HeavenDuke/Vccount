@@ -13,6 +13,7 @@ import Index from './components/Index.vue'
 import ChangePassword from './components/ChangePassword.vue'
 import EditInfo from './components/EditInfo.vue'
 import NewRecord from './components/NewRecord.vue'
+import EditRecord from './components/EditRecord.vue'
 
 // Routes
 const routes = {
@@ -32,6 +33,9 @@ const routes = {
     },
     '/accounting/new': {
         component: NewRecord
+    },
+    '/accounting/:accounting_id/edit': {
+        component: EditRecord
     },
     '/about': {
         component: About

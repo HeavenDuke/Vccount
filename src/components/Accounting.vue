@@ -4,7 +4,7 @@
             <item v-for="(date, daily_records) in records" class="listed-item">
                 <list>
                     <item class="item-divider">{{date}}</item>
-                    <item v-for="record in daily_records">
+                    <item v-for="record in daily_records" @click.native="toRecordDetail(record.id)">
                         <div class="hairline-top"></div>
                         <div class="hairline-bottom">
                             {{record.explanation}}
@@ -18,9 +18,11 @@
     </div>
 </template>
 <script>
+    import FilterModal from './Filter.vue'
     export default {
         data () {
             return {
+                modal: undefined,
                 nomore: true,
                 backButtonText: "<i class='icon ion-navicon'></i> 筛选",
                 menuButtonText: "<i class='icon ion-plus'> 新建</i>",
@@ -119,7 +121,7 @@
                 this.$router.go('/accounting/new');
             },
             showFilter() {
-
+                $vonicModal.show('filter-modal');
             },
             onRefresh(done) {
                 setTimeout(() => {
@@ -131,7 +133,16 @@
                     this.nomore = true;
                     done();
                 }, 1500)
+            },
+            toRecordDetail: function (id) {
+                this.$router.go("/accounting/" + id + "/edit");
             }
+        },
+        created() {
+            $vonicModal.fromComponent("filter-modal", FilterModal);
+        },
+        destroyed() {
+            $vonicModal.destroy();
         }
     }
 </script>
