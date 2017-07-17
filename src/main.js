@@ -10,6 +10,8 @@ import Welcome from './components/Welcome.vue'
 import Login from './components/Login.vue'
 import Register from './components/Register.vue'
 import Index from './components/Index.vue'
+import ChangePassword from './components/ChangePassword.vue'
+import EditInfo from './components/EditInfo.vue'
 
 // Routes
 const routes = {
@@ -29,6 +31,12 @@ const routes = {
     },
     '/about': {
         component: About
+    },
+    "/user/edit": {
+        component: EditInfo
+    },
+    "/password/edit": {
+        component: ChangePassword
     },
     '/welcome': {
         component: Welcome
