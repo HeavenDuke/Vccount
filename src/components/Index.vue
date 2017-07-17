@@ -8,18 +8,18 @@
         data() {
             return {
                 menus: [{
-                    iconOn: 'ion-ios-home',
-                    iconOff: 'ion-ios-home-outline',
+                    iconOn: 'ion-pie-graph',
+                    iconOff: 'ion-pie-graph',
                     text: "收支统计",
                     path: "/stat"
                 }, {
-                    iconOn: 'ion-ios-home',
-                    iconOff: 'ion-ios-home-outline',
+                    iconOn: 'ion-social-usd',
+                    iconOff: 'ion-social-usd',
                     text: "账目管理",
                     path: "/accounting"
                 }, {
-                    iconOn: 'ion-ios-home',
-                    iconOff: 'ion-ios-home-outline',
+                    iconOn: 'ion-person',
+                    iconOff: 'ion-person',
                     text: "个人中心",
                     path: "/menu"
                 }]
