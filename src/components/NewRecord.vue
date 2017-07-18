@@ -20,7 +20,9 @@
                        label="地点"></von-input>
             <item class="item-divider">付款/入账方式</item>
             <von-radio :options="methodOptions" :value.sync="record.methodIndex"></von-radio>
-            <div>{{record.method}}</div>
+            <div class="padding">
+                <md-button class="button button-positive button-block">提交</md-button>
+            </div>
         </div>
     </div>
 </template>

@@ -14,6 +14,7 @@ import ChangePassword from './components/ChangePassword.vue'
 import EditInfo from './components/EditInfo.vue'
 import NewRecord from './components/NewRecord.vue'
 import EditRecord from './components/EditRecord.vue'
+import ResetPassword from './components/ResetPassword.vue'
 
 // Routes
 const routes = {
@@ -54,6 +55,9 @@ const routes = {
     },
     '/register': {
         component: Register
+    },
+    '/password/new': {
+        component: ResetPassword
     }
 };
 

@@ -2,8 +2,7 @@
     <div class="page has-navbar has-tabbar" v-nav="{title: '个人中心', showBackButton: false}"  v-tabbar-menu-index="2">
         <div class="page-content padding-top">
             <list>
-                <!--TODO: 个人信息摘要-->
-                <item>
+                <item @click.native="this.$router.go('/user/edit')">
                     <div class="head-container">
                         <img src="/static/favicon.ico"/>
                     </div>
