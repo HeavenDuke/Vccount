@@ -22,6 +22,7 @@
     export default {
         data () {
             return {
+                filter: [],
                 modal: undefined,
                 nomore: true,
                 backButtonText: "<i class='icon ion-navicon'></i> 筛选",
@@ -139,6 +140,17 @@
             }
         },
         created() {
+            let currc = this;
+            FilterModal.methods.confirm = function () {
+                currc.filter = JSON.parse(JSON.stringify(this.filter));
+                FilterModal.data = () => {
+                    return {
+                        filter: JSON.parse(JSON.stringify(currc.filter)),
+                        lastEdit: JSON.parse(JSON.stringify(currc.filter))
+                    }
+                };
+                $vonicModal.hide();
+            };
             $vonicModal.fromComponent("filter-modal", FilterModal);
         },
         destroyed() {
