@@ -6,10 +6,10 @@
                        :value.sync="record.explanation"
                        placeholder="有关收支的描述信息，诸如原因等"
                        label="收支说明"></von-input>
-            <von-input type="text"
-                       :value.sync="record.budget"
-                       placeholder="收入或支出的额度"
-                       label="额度"></von-input>
+            <number-input :step=0.01
+                          :value.sync="record.budget"
+                          placeholder="收入或支出的额度"
+                          label="额度"></number-input>
             <von-input type="text"
                        :value.sync="record.date"
                        placeholder="收支产生的日期"
@@ -27,7 +27,7 @@
     </div>
 </template>
 <script>
-    import myDatepicker from 'vue-datepicker/vue-datepicker-1.vue'
+    import NumberInput from './Input/NumberInput.vue'
     export default {
         data() {
             let methodOptions = ["微信支付", "支付宝", "银行卡", "现金"];
@@ -44,14 +44,11 @@
             }
         },
         watch: {
-            'record.methodIndex': {
-                handler: (val, oldVal) => {
-
-                },
-                deep: true
+            record: function () {
+                console.log(this);
             }
         },
-        components: { "datepicker": myDatepicker }
+        components: { "number-input": NumberInput }
     }
 </script>
 <style>

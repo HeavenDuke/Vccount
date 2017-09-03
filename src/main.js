@@ -1,5 +1,6 @@
 import Vue from 'vue'
 import Vonic from 'vonic'
+import resource from 'vue-resource'
 
 // Page Components
 import About from './components/About.vue'
@@ -18,20 +19,6 @@ import ResetPassword from './components/ResetPassword.vue'
 
 // Routes
 const routes = {
-    '/': {
-        component: Index,
-        subRoutes: {
-            '/menu': {
-                component: Menu
-            },
-            '/accounting': {
-                component: Accounting
-            },
-            '/stat': {
-                component: Stat
-            }
-        }
-    },
     '/accounting/new': {
         component: NewRecord
     },
@@ -58,7 +45,24 @@ const routes = {
     },
     '/password/new': {
         component: ResetPassword
+    },
+    '/': {
+        component: Index,
+        subRoutes: {
+            '/menu': {
+                component: Menu
+            },
+            '/accounting': {
+                component: Accounting
+            },
+            '/stat': {
+                component: Stat
+            }
+        }
     }
 };
+
+Vue.use(resource);
+Vue.http.options.root = "http://localhost:3000";
 
 Vue.use(Vonic.app, {routes: routes, defaultRouteUrl: '/'});

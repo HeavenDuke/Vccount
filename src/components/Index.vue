@@ -26,10 +26,6 @@
             }
         },
         methods: {
-            menuClicked(menuIndex) {
-                console.log(menuIndex);
-            },
-
             beforeDestroy() {
                 $tabbar.$emit('hideTabbar')
             }

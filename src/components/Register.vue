@@ -9,23 +9,19 @@
             <h4 class="light login-header text-center">用户注册</h4>
             <div class="padding">
                 <von-input type="text"
-                           :value.sync="info.key"
+                           :value.sync="info.username"
                            placeholder="请设置您的用户名"
                            label="用户名"></von-input>
                 <von-input type="text"
-                           :value.sync="info.key"
+                           :value.sync="info.telephone"
                            placeholder="请设置您的手机号"
                            label="手机号"></von-input>
-                <von-input type="text"
-                           :value.sync="info.key"
-                           placeholder="请设置您的邮箱"
-                           label="邮箱"></von-input>
                 <von-input type="password"
                            :value.sync="info.password"
                            placeholder="请设置您的密码"
                            label="密码"></von-input>
                 <von-input type="password"
-                           :value.sync="info.password"
+                           :value.sync="info.confirm"
                            placeholder="请再次输入您的密码"
                            label="确认密码"></von-input>
                 <md-button class="button button-positive button-block" @click.native="register">注册</md-button>

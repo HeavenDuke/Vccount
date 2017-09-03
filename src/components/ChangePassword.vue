@@ -11,10 +11,10 @@
                  label="新密码"></von-input>
       <von-input type="password"
                  :value.sync="password.p_confirm"
-                 placeholder="请再次输入新设置的密码，两次输入应一致"
+                 placeholder="请再次输入新设置的密码"
                  label="确认密码"></von-input>
       <div class="padding">
-        <md-button class="button button-positive button-block">提交</md-button>
+        <md-button class="button button-positive button-block" @click="submit">提交</md-button>
       </div>
 
     </div>
@@ -29,6 +29,21 @@
                   p_new: "",
                   p_confirm: ""
               }
+          }
+      },
+      methods: {
+          submit() {
+              var access = JSON.parse(localStorage.getItem('access_token'));
+              this.$http.put("users", {
+                  password: this.password.p_old,
+                  newPassword: this.password.p_new,
+                  confirmPassword: this.password.p_confirm,
+                  access_token: access._id
+              }).then(function (response) {
+                  if (response.body.code == 200) {
+                      this.$router.go("/menu");
+                  }
+              });
           }
       }
   }

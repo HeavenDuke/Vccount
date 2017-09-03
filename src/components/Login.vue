@@ -9,9 +9,9 @@
             <h4 class="light login-header text-center">用户登录</h4>
             <div class="padding">
                 <von-input type="text"
-                           :value.sync="info.key"
-                           placeholder="请输入用户名/手机号/邮箱"
-                           label="账号"></von-input>
+                           :value.sync="info.email"
+                           placeholder="请输入邮箱"
+                           label="邮箱"></von-input>
                 <von-input type="password"
                            :value.sync="info.password"
                            placeholder="请输入密码"
@@ -34,14 +34,22 @@
         data () {
             return {
                 info: {
-                    key: "",
+                    email: "",
                     password: ""
                 }
             }
         },
         methods: {
             login() {
-                this.$router.go('/stat');
+                this.$http.post("users/sessions", {
+                    email: this.info.email,
+                    password: this.info.password
+                }).then(function (response) {
+                    if (response.body.code == 200) {
+                        localStorage.setItem("access_token", JSON.stringify(response.body.data.session));
+                        this.$router.go('/accounting');
+                    }
+                });
             }
         }
     }

@@ -7,11 +7,11 @@
                         <img src="/static/favicon.ico"/>
                     </div>
                     <div class="profile-container">
-                        <div class="name">刘瀚诚</div>
-                        <div class="meta">18811409948</div>
+                        <div class="name">{{info.username}}</div>
+                        <div class="meta">{{info.email}}</div>
                     </div>
                     <div class="profile-entry-container">
-                        <div class="icon ion-ios-arrow-right entry"> </div>
+                        <div class="icon ion-ios-arrow-right entry"></div>
                     </div>
                 </item>
             </list>
@@ -25,7 +25,7 @@
                 </item>
             </list>
             <div class="padding-left padding-right">
-                <md-button class="button button-assertive button-block">登出</md-button>
+                <md-button class="button button-assertive button-block" @click="logout">登出</md-button>
             </div>
         </div>
     </div>
@@ -34,16 +34,47 @@
     export default {
         data () {
             return {
+                info: {
+                    username: "",
+                    email: ""
+                },
                 menuGroup: [[{
                     text: "修改密码",
                     link: "/password/edit"
                 }], [{
                     text: "应用信息",
                     link: "/about"
-                }, {
-                    text: "设置",
-                    link: "/setting"
                 }]]
+            }
+        },
+        methods: {
+            logout() {
+                localStorage.removeItem("access_token");
+                this.$router.go('/login');
+            }
+        },
+        created: function () {
+            if (localStorage.getItem('access_token')) {
+                var access = JSON.parse(localStorage.getItem('access_token'));
+                this.$http.get("users?access_token=" + access._id).then(function (response) {
+                    this.info.username = response.body.data.username;
+                    this.info.email = response.body.data.email;
+                });
+            }
+            else {
+                this.$router.go('/login');
+            }
+        },
+        mounted: function () {
+            if (localStorage.getItem('access_token')) {
+                var access = JSON.parse(localStorage.getItem('access_token'));
+                this.$http.get("users?access_token=" + access._id).then(function (response) {
+                    this.info.username = response.body.data.username;
+                    this.info.email = response.body.data.email;
+                });
+            }
+            else {
+                this.$router.go('/login');
             }
         }
     }
