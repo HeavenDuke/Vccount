@@ -4,7 +4,7 @@
             <item v-for="(date, daily_records) in records" class="listed-item">
                 <list>
                     <item class="item-divider">{{date}}</item>
-                    <item v-for="record in daily_records" @click.native="toRecordDetail(record.id)">
+                    <item v-for="record in daily_records" @click.native="toRecordDetail(record._id)">
                         <div class="hairline-top"></div>
                         <div class="hairline-bottom">
                             {{record.explanation}}
@@ -24,61 +24,57 @@
             return {
                 filter: [],
                 modal: undefined,
-                nomore: true,
+                nomore: false,
                 backButtonText: "<i class='icon ion-navicon'></i> 筛选",
                 menuButtonText: "<i class='icon ion-plus'> 新建</i>",
-                records: {
-                    "2017-01-01": [{
-                        id: "1",
-                        budget: -10,
-                        method: "paypal",
-                        explanation: "买可乐",
-                        date: new Date("2017-01-01"),
-                        location: "America",
-                        geometry: [1.23, 3.45]
-                    }, {
-                        id: "2",
-                        budget: -10,
-                        method: "wechat",
-                        explanation: "午饭",
-                        date: new Date("2017-01-01"),
-                        location: "America",
-                        geometry: [1.23, 3.45]
-                    }, {
-                        id: "3",
-                        budget: -10,
-                        method: "wechat",
-                        explanation: "晚饭",
-                        date: new Date("2017-01-01"),
-                        location: "America",
-                        geometry: [1.23, 3.45]
-                    }, {
-                        id: "4",
-                        budget: -0.2,
-                        method: "wechat",
-                        explanation: "单日打卡",
-                        date: new Date("2017-01-01"),
-                        location: "America",
-                        geometry: [1.23, 3.45]
-                    }, {
-                        id: "5",
-                        budget: 6666.66,
-                        method: "cash",
-                        explanation: "彩票中奖",
-                        date: new Date("2017-01-01"),
-                        location: "America",
-                        geometry: [1.23, 3.45]
-                    }],
-                    "2017-01-02": [{
-                        id: "2333",
-                        budget: -99,
-                        method: "cache",
-                        explanation: "Steam游戏购买",
-                        date: new Date("2017-01-02"),
-                        location: "America",
-                        geometry: [1.23, 3.45]
-                    }]
-                }
+                lastDate: null,
+                records: {}
+//                records: {
+//                    "2017-01-01": [{
+//                        id: "1",
+//                        budget: -10,
+//                        method: "paypal",
+//                        explanation: "买可乐",
+//                        date: new Date("2017-01-01"),
+//                        location: "America"
+//                    }, {
+//                        id: "2",
+//                        budget: -10,
+//                        method: "wechat",
+//                        explanation: "午饭",
+//                        date: new Date("2017-01-01"),
+//                        location: "America"
+//                    }, {
+//                        id: "3",
+//                        budget: -10,
+//                        method: "wechat",
+//                        explanation: "晚饭",
+//                        date: new Date("2017-01-01"),
+//                        location: "America"
+//                    }, {
+//                        id: "4",
+//                        budget: -0.2,
+//                        method: "wechat",
+//                        explanation: "单日打卡",
+//                        date: new Date("2017-01-01"),
+//                        location: "America"
+//                    }, {
+//                        id: "5",
+//                        budget: 6666.66,
+//                        method: "cash",
+//                        explanation: "彩票中奖",
+//                        date: new Date("2017-01-01"),
+//                        location: "America"
+//                    }],
+//                    "2017-01-02": [{
+//                        id: "2333",
+//                        budget: -99,
+//                        method: "cache",
+//                        explanation: "Steam游戏购买",
+//                        date: new Date("2017-01-02"),
+//                        location: "America"
+//                    }]
+//                }
             }
         },
         filters: {
@@ -125,22 +121,76 @@
                 $vonicModal.show('filter-modal');
             },
             onRefresh(done) {
-                setTimeout(() => {
-                    done();
-                }, 1500)
+                var app = this;
+                app.loadList({date: null}, function () {
+                    app.lastDate = null;
+                    setTimeout(() => {
+                        done();
+                    }, 1000);
+                });
             },
             onInfinite(done) {
-                setTimeout(() => {
-                    this.nomore = true;
-                    done();
-                }, 1500)
+                var app = this;
+                app.loadList({date: app.lastDate}, function () {
+                    app.nomore = true;
+                    setTimeout(() => {
+                        done();
+                    }, 1000);
+                });
+            },
+            loadList(filter, callback) {
+                var access = JSON.parse(localStorage.getItem('access_token'));
+                this.$http.get('accounts?access_token=' + access._id + (filter.date ? "&date=" + filter.date : "")).then(function (response) {
+                    if (response.body.code == 200) {
+                        if (response.body.data.isLast) {
+                            this.nomore = true;
+                        }
+                        else {
+                            this.nomore = false;
+                        }
+                        if (response.body.data.date) {
+                            var _records = {};
+                            _records[response.body.data.date] = response.body.data.accounts;
+                            this.records = Object.assign({}, this.records, _records);
+                            var _lastDate = new Date(response.body.data.date);
+                            _lastDate.setDate(_lastDate.getDate() - 1);
+                            this.lastDate = _lastDate.getFullYear() + "-" + (_lastDate.getMonth() + 1) + "-" + _lastDate.getDate();
+                        }
+                        else if (response.body.data.accounts) {
+                            var keys = Object.keys(response.body.data.accounts);
+                            for(var i = 0; i < keys.length; i++) {
+                                keys[i] = {
+                                    name: keys[i],
+                                    value: new Date(keys[i])
+                                };
+                            }
+                            keys.sort(function (dt1, dt2) {
+                                if (dt1.value < dt2.value) {
+                                    return -1;
+                                }
+                                else if (dt1.value == dt2.value) {
+                                    return 0;
+                                }
+                                return 1;
+                            });
+                            var _records = {};
+                            for(var i = keys.length - 1; i >= 0; i--) {
+                                _records[keys[i].name] = response.body.data.accounts[keys[i].name];
+                            }
+                            this.records = _records;
+                        }
+                        if (callback) {
+                            callback();
+                        }
+                    }
+                });
             },
             toRecordDetail: function (id) {
                 this.$router.go("/accounting/" + id + "/edit");
             }
         },
         created() {
-            let currc = this;
+            var currc = this;
             FilterModal.methods.confirm = function () {
                 currc.filter = JSON.parse(JSON.stringify(this.filter));
                 FilterModal.data = () => {
@@ -152,6 +202,7 @@
                 $vonicModal.hide();
             };
             $vonicModal.fromComponent("filter-modal", FilterModal);
+            this.loadList({});
         },
         destroyed() {
             $vonicModal.destroy();

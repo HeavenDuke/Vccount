@@ -2,7 +2,7 @@
     <div class="von-input-wrapper" :class="{'has-floating-label': floatingLabel == 'true'}">
         <label class="item item-input thin-border von-input" :class="{'item-floating-label': floatingLabel == 'true'}">
             <span v-if="label != ''" class="input-label" :class="{'has-input': floatingLabel == 'true' && !!value}">{{label}}</span>
-            <input type="date" value="{{value}}"/>
+            <input type="date" v-model="value" value="{{value}}"/>
         </label>
     </div>
 </template>
@@ -27,7 +27,8 @@
                 type: String,
                 default: 'false'
             }
-        }
+        },
+
     }
 </script>
 <style lang="scss" scoped>

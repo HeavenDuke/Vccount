@@ -18,15 +18,15 @@
                        :value.sync="record.location"
                        placeholder="收支产生的地点"
                        label="地点"></von-input>
-            <div class="side-right2">
-                <div class="list-pane paging-format">
-                    <baidu-map style="height:500px"></baidu-map>
-                </div>
-            </div>
+            <!--<div class="side-right2">-->
+                <!--<div class="list-pane paging-format">-->
+                    <!--<baidu-map style="height:500px"></baidu-map>-->
+                <!--</div>-->
+            <!--</div>-->
             <item class="item-divider">付款/入账方式</item>
             <von-radio :options="methodOptions" :value.sync="record.methodIndex"></von-radio>
             <div class="padding">
-                <md-button class="button button-positive button-block">提交</md-button>
+                <md-button class="button button-positive button-block" @click.native="submit">提交</md-button>
             </div>
         </div>
     </div>
@@ -37,17 +37,35 @@
     import BaiduMap from 'vue-baidu-map'
     export default {
         data() {
-            let methodOptions = ["微信支付", "支付宝", "银行卡", "现金"];
+            var methodOptions = ["微信支付", "支付宝", "银行卡", "现金"];
             return {
                 methodOptions: methodOptions,
                 record: {
                     budget: 0,
                     methodIndex: 0,
                     explanation: "",
-                    date: "2017-1-1",
+                    date: "2017-01-01",
                     location: "",
-                    geometry: [1.23, 3.45]
+//                    geometry: [1.23, 3.45]
                 }
+            }
+        },
+        methods: {
+            submit() {
+                var access = JSON.parse(localStorage.getItem('access_token'));
+                var record = {
+                    budget: this.record.budget,
+                    date: this.record.date,
+                    explanation: this.record.explanation,
+                    location: this.record.location,
+                    method: this.methodOptions[this.record.methodIndex],
+                    access_token: access._id
+                };
+                this.$http.post("accounts", record).then(function (response) {
+                    if (response.body.code == 200) {
+                        this.$router.go('/accounting');
+                    }
+                });
             }
         },
         watch: {

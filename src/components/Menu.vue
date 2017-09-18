@@ -52,30 +52,6 @@
                 localStorage.removeItem("access_token");
                 this.$router.go('/login');
             }
-        },
-        created: function () {
-            if (localStorage.getItem('access_token')) {
-                var access = JSON.parse(localStorage.getItem('access_token'));
-                this.$http.get("users?access_token=" + access._id).then(function (response) {
-                    this.info.username = response.body.data.username;
-                    this.info.email = response.body.data.email;
-                });
-            }
-            else {
-                this.$router.go('/login');
-            }
-        },
-        mounted: function () {
-            if (localStorage.getItem('access_token')) {
-                var access = JSON.parse(localStorage.getItem('access_token'));
-                this.$http.get("users?access_token=" + access._id).then(function (response) {
-                    this.info.username = response.body.data.username;
-                    this.info.email = response.body.data.email;
-                });
-            }
-            else {
-                this.$router.go('/login');
-            }
         }
     }
 </script>
